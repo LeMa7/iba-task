@@ -9,6 +9,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using SpeedAccountingSystem.Repositories;
+using SpeedAccountingSystem.RepositoryInterfaces;
+using SpeedAccountingSystem.ServiceInterfaces;
+using SpeedAccountingSystem.Services;
 
 namespace SpeedAccountingSystem
 {
@@ -25,6 +29,8 @@ namespace SpeedAccountingSystem
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddTransient<ISpeedSystemService, SpeedSystemService>();
+            services.AddTransient<ISpeedSystemRepository, SpeedSystemRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,7 +47,12 @@ namespace SpeedAccountingSystem
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=SpeedSystem}/{action=GetOverSpeedForDay}/{day}/{speed}");
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=SpeedSystem}/{action=GetMinAndMaxForDay}/{day}");
             });
         }
     }
