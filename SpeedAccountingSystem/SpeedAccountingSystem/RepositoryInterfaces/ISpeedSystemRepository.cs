@@ -8,6 +8,6 @@ namespace SpeedAccountingSystem.RepositoryInterfaces
     {
         IEnumerable<SpeedSystemRecordModel> GetOverspeedForDay(DateTime day, double speed);
 
-        IEnumerable<SpeedSystemRecordModel> GetMinAndMaxForDay(DateTime day);
+        IEnumerable<SpeedSystemRecordModel> GetMinAndMaxSpeedForDay(DateTime day);
     }
 }

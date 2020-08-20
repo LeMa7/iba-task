@@ -30,6 +30,7 @@ namespace SpeedAccountingSystem
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            env.EnvironmentName = "Production";
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -38,6 +39,8 @@ namespace SpeedAccountingSystem
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseStatusCodePages();
 
             app.UseEndpoints(endpoints =>
             {

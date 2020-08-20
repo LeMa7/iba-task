@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SpeedAccountingSystem.Models;
+using SpeedAccountingSystem.Schedulers;
 using SpeedAccountingSystem.ServiceInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Web.Http;
 
 namespace SpeedAccountingSystem.Controllers
 {
@@ -20,17 +23,23 @@ namespace SpeedAccountingSystem.Controllers
 
         public IEnumerable<SpeedSystemRecordModel> GetOverspeedForDay(DateTime day, double speed)
         {
+            if (speedSystemService.IsAccessDenied())
+            {
+                throw new HttpResponseException(HttpStatusCode.ServiceUnavailable);
+            }
+
             return speedSystemService.GetOverspeedForDay(day, speed);
         }
 
-        public IEnumerable<SpeedSystemRecordModel> GetMinAndMaxForDay(DateTime day)
+        public IEnumerable<SpeedSystemRecordModel> GetMinAndMaxSpeedForDay(DateTime day)
         {
-            return speedSystemService.GetMinAndMaxForDay(day);
-        }
+            DataGeneratorScheduler.Start();
+            if (speedSystemService.IsAccessDenied())
+            {
+                throw new HttpResponseException(HttpStatusCode.ServiceUnavailable);
+            }
 
-        public string Index()
-        {
-            return "Hi";
+            return speedSystemService.GetMinAndMaxSpeedForDay(day);
         }
     }
 }

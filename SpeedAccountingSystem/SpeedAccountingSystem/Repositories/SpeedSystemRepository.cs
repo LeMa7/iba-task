@@ -19,7 +19,7 @@ namespace SpeedAccountingSystem.Repositories
                 .Where(x => x.Time.Date == day.Date && x.Speed > speed) ?? Enumerable.Empty<SpeedSystemRecordModel>();
         }
 
-        public IEnumerable<SpeedSystemRecordModel> GetMinAndMaxForDay(DateTime day)
+        public IEnumerable<SpeedSystemRecordModel> GetMinAndMaxSpeedForDay(DateTime day)
         {
             string jsonString = File.ReadAllText(DataPath);
             var models = JsonConvert.DeserializeObject<List<SpeedSystemRecordModel>>(jsonString).Where(x => x.Time.Date == day.Date);

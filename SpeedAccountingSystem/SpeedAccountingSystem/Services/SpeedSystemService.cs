@@ -19,36 +19,20 @@ namespace SpeedAccountingSystem.Services
             this.configuration = configuration;
         }
 
-        public IEnumerable<SpeedSystemRecordModel> GetOverspeedForDay(DateTime day, double speed)
-        {
-            if (IsAccessDenied())
-            {
-                throw new UnauthorizedAccessException();
-            }
+        public IEnumerable<SpeedSystemRecordModel> GetOverspeedForDay(DateTime day, double speed) =>
+            speedSystemRepository.GetOverspeedForDay(day, speed);
 
-            return speedSystemRepository.GetOverspeedForDay(day, speed);
-        }
+        public IEnumerable<SpeedSystemRecordModel> GetMinAndMaxSpeedForDay(DateTime day) =>
+            speedSystemRepository.GetMinAndMaxSpeedForDay(day);
 
-        public IEnumerable<SpeedSystemRecordModel> GetMinAndMaxForDay(DateTime day)
-        {
-            if (IsAccessDenied())
-            {
-                throw new UnauthorizedAccessException();
-            }
-
-            return speedSystemRepository.GetMinAndMaxForDay(day);
-        }
-
-        private TimeSpan GetTimeFromConfigurationString(string time)
-        {
-            return DateTime.ParseExact(time, "HH:mm", CultureInfo.InvariantCulture).TimeOfDay;
-        }
-
-        private bool IsAccessDenied()
+        public bool IsAccessDenied()
         {
             var startAccessTime = GetTimeFromConfigurationString(configuration["RequestAccess:StartTime"]);
             var endAccessTime = GetTimeFromConfigurationString(configuration["RequestAccess:EndTime"]);
-            return DateTime.Now.TimeOfDay < startAccessTime || DateTime.Now.TimeOfDay > endAccessTime;
+            return DateTime.Now.TimeOfDay <= startAccessTime || DateTime.Now.TimeOfDay >= endAccessTime;
         }
+
+        private TimeSpan GetTimeFromConfigurationString(string time) =>
+            DateTime.ParseExact(time, "HH:mm", CultureInfo.InvariantCulture).TimeOfDay;
     }
 }
