@@ -23,7 +23,7 @@ namespace SpeedAccountingSystem.Jobs
                 }
             };
 
-            using (var stream = File.Open(@"Data/SpeedSystemData.csv", FileMode.Append))
+            using (var stream = File.Open(@"Data/SpeedSystemData.csv", FileMode.Append, FileAccess.Write, FileShare.Read))
             using (var writer = new StreamWriter(stream))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
@@ -35,7 +35,15 @@ namespace SpeedAccountingSystem.Jobs
         private string GenerateRandomCarNumber()
         {
             Random rnd = new Random();
-            return rnd.Next(1000, 9999) + " " + GetRandomCharacter() + GetRandomCharacter() + "-" + rnd.Next(1, 6);
+            return rnd.Next(0, 9).ToString()
+                + rnd.Next(0, 9).ToString()
+                + rnd.Next(0, 9).ToString()
+                + rnd.Next(0, 9).ToString()
+                + " "
+                + GetRandomCharacter()
+                + GetRandomCharacter()
+                + "-"
+                + rnd.Next(1, 6);
         }
 
         private char GetRandomCharacter()

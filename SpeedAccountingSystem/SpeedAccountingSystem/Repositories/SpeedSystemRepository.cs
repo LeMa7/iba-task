@@ -16,7 +16,8 @@ namespace SpeedAccountingSystem.Repositories
         public IEnumerable<SpeedSystemRecordModel> GetOverspeedForDay(DateTime day, double speed)
         {
             var models = new List<SpeedSystemRecordModel>();
-            using (var reader = new StreamReader(DataPath))
+            using (var stream = File.Open(DataPath, FileMode.Open, FileAccess.Read, FileShare.Write))
+            using (var reader = new StreamReader(stream))
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
                 models = csv.GetRecords<SpeedSystemRecordModel>().Where(x => x.Time.Date == day.Date && x.Speed > speed).ToList();

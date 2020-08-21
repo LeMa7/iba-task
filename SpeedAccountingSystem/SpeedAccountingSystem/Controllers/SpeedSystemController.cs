@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using SpeedAccountingSystem.Models;
 using SpeedAccountingSystem.Schedulers;
 using SpeedAccountingSystem.ServiceInterfaces;
