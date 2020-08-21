@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using CsvHelper;
 using SpeedAccountingSystem.Models;
 using SpeedAccountingSystem.RepositoryInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -10,19 +11,26 @@ namespace SpeedAccountingSystem.Repositories
 {
     public class SpeedSystemRepository : ISpeedSystemRepository
     {
-        private const string DataPath = @"Data/SpeedSystemData.json";
+        private const string DataPath = @"Data/SpeedSystemData.csv";
 
         public IEnumerable<SpeedSystemRecordModel> GetOverspeedForDay(DateTime day, double speed)
         {
-            string jsonString = File.ReadAllText(DataPath);
-            return JsonConvert.DeserializeObject<List<SpeedSystemRecordModel>>(jsonString)
-                .Where(x => x.Time.Date == day.Date && x.Speed > speed) ?? Enumerable.Empty<SpeedSystemRecordModel>();
+            using (var reader = new StreamReader(DataPath))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                var records = csv.GetRecords<SpeedSystemRecordModel>();
+                return records.Where(x => x.Time.Date == day.Date && x.Speed > speed) ?? Enumerable.Empty<SpeedSystemRecordModel>();
+            }
         }
 
         public IEnumerable<SpeedSystemRecordModel> GetMinAndMaxSpeedForDay(DateTime day)
         {
-            string jsonString = File.ReadAllText(DataPath);
-            var models = JsonConvert.DeserializeObject<List<SpeedSystemRecordModel>>(jsonString).Where(x => x.Time.Date == day.Date);
+            var models = new List<SpeedSystemRecordModel>();
+            using (var reader = new StreamReader(DataPath))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                models = csv.GetRecords<SpeedSystemRecordModel>().ToList();
+            }
             if (!models.Any())
             {
                 return Enumerable.Empty<SpeedSystemRecordModel>();

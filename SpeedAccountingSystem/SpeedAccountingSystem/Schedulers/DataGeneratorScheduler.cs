@@ -20,5 +20,12 @@ namespace SpeedAccountingSystem.Schedulers
                 .Build();
             await scheduler.ScheduleJob(job, trigger);
         }
+
+        public static async void PauseAll()
+        {
+            ISchedulerFactory schfack = new StdSchedulerFactory();
+            IScheduler scheduler = await schfack.GetScheduler();
+            await scheduler.PauseAll();
+        }
     }
 }

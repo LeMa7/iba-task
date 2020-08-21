@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using System.IO;
 using Quartz;
+using CsvHelper;
 using SpeedAccountingSystem.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace SpeedAccountingSystem.Jobs
 {
@@ -13,16 +14,22 @@ namespace SpeedAccountingSystem.Jobs
         public async Task Execute(IJobExecutionContext context)
         {
             Random rnd = new Random();
-            var model = new SpeedSystemRecordModel()
+            var model = new List<SpeedSystemRecordModel>()
             {
+                new SpeedSystemRecordModel{
                 Time = DateTime.Now,
                 Speed = rnd.Next(0, 150),
                 CarNumber = GenerateRandomCarNumber()
+                }
             };
-            var list = JsonConvert.DeserializeObject<List<SpeedSystemRecordModel>>(File.ReadAllText(@"Data/SpeedSystemData.json"));
-            list.Add(model);
-            var convertedJson = JsonConvert.SerializeObject(list, Formatting.Indented);
-            await File.WriteAllTextAsync(@"Data/SpeedSystemData.json", convertedJson);
+
+            using (var stream = File.Open(@"Data/SpeedSystemData.csv", FileMode.Append))
+            using (var writer = new StreamWriter(stream))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csv.Configuration.HasHeaderRecord = false;
+                await csv.WriteRecordsAsync(model);
+            }
         }
 
         private string GenerateRandomCarNumber()

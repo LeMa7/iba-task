@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using SpeedAccountingSystem.Models;
 using SpeedAccountingSystem.Schedulers;
 using SpeedAccountingSystem.ServiceInterfaces;
@@ -33,13 +34,22 @@ namespace SpeedAccountingSystem.Controllers
 
         public IEnumerable<SpeedSystemRecordModel> GetMinAndMaxSpeedForDay(DateTime day)
         {
-            DataGeneratorScheduler.Start();
             if (speedSystemService.IsAccessDenied())
             {
                 throw new HttpResponseException(HttpStatusCode.ServiceUnavailable);
             }
 
             return speedSystemService.GetMinAndMaxSpeedForDay(day);
+        }
+
+        public void RunGenerator()
+        {
+            DataGeneratorScheduler.Start();
+        }
+
+        public void StopGenerator()
+        {
+            DataGeneratorScheduler.PauseAll();
         }
     }
 }

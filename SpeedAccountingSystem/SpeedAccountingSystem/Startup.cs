@@ -45,11 +45,14 @@ namespace SpeedAccountingSystem
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
+                    name: "Overspeed",
                     pattern: "{controller=SpeedSystem}/{action=GetOverSpeedForDay}/{day}/{speed}");
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=SpeedSystem}/{action=GetMinAndMaxForDay}/{day}");
+                    name: "MinAndMaxSpeed",
+                    pattern: "{controller=SpeedSystem}/{action=GetMinAndMaxSpeedForDay}/{day}");
+                endpoints.MapControllerRoute(
+                   name: "Generator",
+                   pattern: "{controller=SpeedSystem}/{action=RunGenerator}");
             });
         }
     }
