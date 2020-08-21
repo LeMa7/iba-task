@@ -16,7 +16,7 @@ namespace SpeedAccountingSystem.Schedulers
                 .StartNow()
                 .WithSimpleSchedule(x => x
                     .WithInterval(TimeSpan.FromMilliseconds(1))
-                    .RepeatForever())
+                    .WithRepeatCount(500000))
                 .Build();
             await scheduler.ScheduleJob(job, trigger);
         }

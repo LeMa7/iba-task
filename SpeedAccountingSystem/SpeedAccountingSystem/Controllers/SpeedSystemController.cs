@@ -5,8 +5,8 @@ using SpeedAccountingSystem.Schedulers;
 using SpeedAccountingSystem.ServiceInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
-using System.Web.Http;
 
 namespace SpeedAccountingSystem.Controllers
 {
@@ -25,7 +25,8 @@ namespace SpeedAccountingSystem.Controllers
         {
             if (speedSystemService.IsAccessDenied())
             {
-                throw new HttpResponseException(HttpStatusCode.ServiceUnavailable);
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                return Enumerable.Empty<SpeedSystemRecordModel>();
             }
 
             return speedSystemService.GetOverspeedForDay(day, speed);
@@ -35,7 +36,8 @@ namespace SpeedAccountingSystem.Controllers
         {
             if (speedSystemService.IsAccessDenied())
             {
-                throw new HttpResponseException(HttpStatusCode.ServiceUnavailable);
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                return Enumerable.Empty<SpeedSystemRecordModel>();
             }
 
             return speedSystemService.GetMinAndMaxSpeedForDay(day);

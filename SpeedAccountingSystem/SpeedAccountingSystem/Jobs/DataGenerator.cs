@@ -17,7 +17,7 @@ namespace SpeedAccountingSystem.Jobs
             var model = new List<SpeedSystemRecordModel>()
             {
                 new SpeedSystemRecordModel{
-                Time = DateTime.Now,
+                Time = RandomDay(),
                 Speed = rnd.Next(0, 150),
                 CarNumber = GenerateRandomCarNumber()
                 }
@@ -53,5 +53,13 @@ namespace SpeedAccountingSystem.Jobs
             int index = rnd.Next(text.Length);
             return text[index];
         }
-    }
+
+        private DateTime RandomDay()
+        {
+            Random gen = new Random();
+            DateTime start = new DateTime(2015, 1, 1);
+            int range = (DateTime.Today - start).Days;
+            return start.AddDays(gen.Next(range));
+        }
+}
 }
