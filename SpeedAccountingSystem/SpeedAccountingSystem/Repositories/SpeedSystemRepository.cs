@@ -15,12 +15,14 @@ namespace SpeedAccountingSystem.Repositories
 
         public IEnumerable<SpeedSystemRecordModel> GetOverspeedForDay(DateTime day, double speed)
         {
+            var models = new List<SpeedSystemRecordModel>();
             using (var reader = new StreamReader(DataPath))
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
-                var records = csv.GetRecords<SpeedSystemRecordModel>();
-                return records.Where(x => x.Time.Date == day.Date && x.Speed > speed) ?? Enumerable.Empty<SpeedSystemRecordModel>();
+                models = csv.GetRecords<SpeedSystemRecordModel>().Where(x => x.Time.Date == day.Date && x.Speed > speed).ToList();
             }
+
+            return models;
         }
 
         public IEnumerable<SpeedSystemRecordModel> GetMinAndMaxSpeedForDay(DateTime day)
