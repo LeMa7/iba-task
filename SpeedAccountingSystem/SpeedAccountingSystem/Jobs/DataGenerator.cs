@@ -18,7 +18,7 @@ namespace SpeedAccountingSystem.Jobs
             {
                 new SpeedSystemRecordModel{
                 Time = RandomDay(),
-                Speed = rnd.Next(0, 150),
+                Speed = rnd.Next(0, 150) + (rnd.Next(0, 9) / 10),
                 CarNumber = GenerateRandomCarNumber()
                 }
             };
